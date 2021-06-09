@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2013-2017 GiaPhuGroup, Ltd. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="header.panel">
+            <block class="Magento\Cms\Block\Block" name="store_locator" after="-">
+                <arguments>
+                    <argument name="block_id" xsi:type="string">store_locator</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="content.top">
+            <block class="AK\StoreSelector\Block\StoreSelector" name="form.store.selector" as="form_store_selector" before="-" template="popup-store.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

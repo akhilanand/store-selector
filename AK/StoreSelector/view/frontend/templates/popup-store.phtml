@@ -1,0 +1,103 @@
+<?php
+/**
+ * Copyright © Akhil Anand. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ */
+
+/**
+ * @var \AK\StoreSelector\Block\StoreSelector $block
+ * @see \AK\StoreSelector\Block\StoreSelector
+ */
+
+?>
+
+<?php
+
+//if ($block->isHomePage()):
+
+    $stores = $block->getStores();
+    $storesNotInList = [0,1]
+    ?>
+    <style>
+        .modal-inner-wrap{
+            width: 30% !important;
+        }
+        #popup-store .store-content {
+            display: none;
+        }
+        #popup-store .content a {
+            width: 100%;
+            font-weight:bold;
+            background: #ccc;
+            padding: 10px;
+            line-height: 30px !important;
+            display: block;
+            padding: 0;
+            text-align: center;
+            margin: 5px;
+        }
+        .modal-content{
+            width: 80%;
+        }
+        .modal-inner-wrap .modal-header h1{
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        #popup-store .intro h2{
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        #store-selector{
+            cursor: pointer;
+          }
+    </style>
+    <div class="block store store-content" id="popup-store" style="display:none">
+        <div class="intro">
+            <h2><?php /* @escapeNotVerified */ echo __('Select Your Store:'); ?></h2>
+        </div>
+        <div class="content">
+            <?php foreach ($stores as $store) {
+        if (!in_array($store->getId(), $storesNotInList)) { ?>
+                    <a class="store-sbumit" data-id="<?= $store->getId() ?>" data-name="<?= $store->getName() ?>" data-code="<?= $store->getCode() ?>"  data-href="<?= $store->getBaseUrl() ?>" href="javascript:void(0);"><?= $store->getName()?></a>
+            <?php }
+    }  ?>
+        </div>
+    </div>
+    <script type="text/x-magento-init">
+        {
+            "#popup-store": {
+                "AK_StoreSelector/js/process-store-selector": {
+                    "popupTitle": "<?php /* @escapeNotVerified */ echo __('Store Selector'); ?>"
+                }
+            }
+        }
+    </script>
+
+    <script>
+        require(['jquery',
+            'jquery/ui',
+            'jquery/jquery.cookie'
+        ], function($){
+            $('.store-sbumit').click(function () {
+                console.log($.cookie('store_selector'));
+                $.cookie('store_selector', '1', { expires: 7, path: '/' });
+                var id = $(this).data("id");
+                var name = $(this).data("name");
+                var code = $(this).data("code");
+                var href = $(this).data("href");
+                $.ajax({
+                    method: "POST",
+                    url: "<?php  echo $block->getAjaxUrl(); ?>",
+                    data: { id: id, name:name, code:name},
+                    dataType: "json"
+                }).done(function( response ) {
+                        window.location = href;
+                });
+            })
+        });
+    </script>
+
+<?php //endif; ?>
